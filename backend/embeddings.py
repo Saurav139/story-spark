@@ -4,9 +4,9 @@ import numpy as np
 #from config import OPEN_AI_KEY
 import chromadb
 from chromadb.config import Settings
-
+import os
 # Set your OpenAI API key
-client = OpenAI(api_key = OPEN_API_KEY)
+client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 
 
 # In-memory storage for embeddings
