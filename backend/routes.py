@@ -61,3 +61,26 @@ async def generate_suggestion(query: str):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating suggestion: {str(e)}")
+
+@router.post("/generate-suggestion-part")
+async def generate_suggestion(query: str):
+    """Endpoint to generate a writing suggestion based on the query and stored segments."""
+    try:
+        # Retrieve similar segments based on the query
+        similar_segments = retrieve_similar_segments(query)
+
+        # Generate a suggestion using the retrieved context and OpenAI's GPT-4 API
+        context = " ".join(similar_segments)
+        prompt = f"Improve the selected User query using context. Limit you answer to two sentences:\n\n{context}\n\nUser query: {query}\n\nSuggestion:"
+
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful creative writing assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return {"suggestion": response.choices[0].message.content}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating suggestion: {str(e)}")
