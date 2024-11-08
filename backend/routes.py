@@ -3,6 +3,7 @@ from typing import List
 from backend.pdf_processor import extract_text_from_pdf, chunk_text
 from backend.embeddings import generate_embeddings, add_to_chromadb, retrieve_similar_segments
 from openai import OpenAI
+import chromadb
 
 client = OpenAI()
 
@@ -84,3 +85,17 @@ async def generate_suggestion(query: str):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating suggestion: {str(e)}")
+    
+chroma_client = chromadb.PersistentClient(path="./chromastore")
+
+# Access the static collection named "Story1"
+story_collection = chroma_client.get_or_create_collection(name="Story1")
+
+@router.delete("/clear-story-collection")
+async def clear_story_collection():
+    try:
+        # Delete all records in the "Story1" collection
+        story_collection.delete()
+        return {"message": "All records in the collection have been deleted."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
