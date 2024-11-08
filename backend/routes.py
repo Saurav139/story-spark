@@ -1,7 +1,7 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException
 from typing import List
-from pdf_processor import extract_text_from_pdf, chunk_text
-from embeddings import generate_embeddings, add_to_chromadb, retrieve_similar_segments
+from backend.pdf_processor import extract_text_from_pdf, chunk_text
+from backend.embeddings import generate_embeddings, add_to_chromadb, retrieve_similar_segments
 from openai import OpenAI
 
 client = OpenAI()
