@@ -95,7 +95,7 @@ story_collection = chroma_client.get_or_create_collection(name="Story1")
 async def clear_story_collection():
     try:
         # Delete all records in the "Story1" collection
-        story_collection.delete(where={})
+        story_collection.delete(where={"type": {"$eq": True}})
         return {"message": "All records in the collection have been deleted."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
